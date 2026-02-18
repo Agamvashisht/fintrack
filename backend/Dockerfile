@@ -1,11 +1,13 @@
 # =============================================================================
 # Stage 1: Dependencies
 # =============================================================================
-FROM node:20-slim AS deps
+FROM node:18-slim AS deps
 
 WORKDIR /app
 
-RUN apt-get update -y && apt-get install -y openssl
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 COPY prisma ./prisma/
@@ -16,11 +18,13 @@ RUN npm ci --only=production && \
 # =============================================================================
 # Stage 2: Builder
 # =============================================================================
-FROM node:20-slim AS builder
+FROM node:18-slim AS builder
 
 WORKDIR /app
 
-RUN apt-get update -y && apt-get install -y openssl
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 RUN npm ci
@@ -32,9 +36,11 @@ RUN npm run prisma:generate && \
 # =============================================================================
 # Stage 3: Production runner
 # =============================================================================
-FROM node:20-slim AS runner
+FROM node:18-slim AS runner
 
-RUN apt-get update -y && apt-get install -y openssl
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 fintrack
