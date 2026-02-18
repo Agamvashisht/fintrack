@@ -82,16 +82,20 @@ export class BudgetRepository {
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
 
-    const budgets = await prisma.budget.findMany({
-      where: { month, year },
-      include: { category: true },
+const budgets = await prisma.budget.findMany({
+  where: { month, year },
+  select: {
+    userId: true,
+    categoryId: true,
+    amount: true,
+    category: {
       select: {
-        userId: true,
-        categoryId: true,
-        amount: true,
-        category: { select: { name: true } },
-      },
-    });
+        name: true
+      }
+    }
+  }
+});
+
 
     return budgets.map((b) => ({
       userId: b.userId,

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt , { SignOptions } from 'jsonwebtoken';
 import { config } from '../config/env';
 
 export interface AccessTokenPayload {
@@ -12,22 +12,37 @@ export interface RefreshTokenPayload {
   tokenId: string;
 }
 
-export const generateAccessToken = (payload: AccessTokenPayload): string => {
-  return jwt.sign(payload, config.JWT_ACCESS_SECRET, {
-    expiresIn: config.JWT_ACCESS_EXPIRES_IN,
+export const generateAccessToken = (
+  payload: AccessTokenPayload
+): string => {
+  const options: SignOptions = {
+    expiresIn: config.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'],
     issuer: 'fintrack-api',
     audience: 'fintrack-app',
-  });
+  };
+
+  return jwt.sign(
+    payload,
+    config.JWT_ACCESS_SECRET,
+    options
+  );
 };
 
-export const generateRefreshToken = (payload: RefreshTokenPayload): string => {
-  return jwt.sign(payload, config.JWT_REFRESH_SECRET, {
-    expiresIn: config.JWT_REFRESH_EXPIRES_IN,
+export const generateRefreshToken = (
+  payload: RefreshTokenPayload
+): string => {
+  const options: SignOptions = {
+    expiresIn: config.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'],
     issuer: 'fintrack-api',
     audience: 'fintrack-app',
-  });
-};
+  };
 
+  return jwt.sign(
+    payload,
+    config.JWT_REFRESH_SECRET,
+    options
+  );
+};
 export const verifyAccessToken = (token: string): AccessTokenPayload => {
   return jwt.verify(token, config.JWT_ACCESS_SECRET, {
     issuer: 'fintrack-api',

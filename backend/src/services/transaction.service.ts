@@ -1,7 +1,7 @@
 import { TransactionType } from '@prisma/client';
 import { TransactionRepository, TransactionFilter } from '../repositories/transaction.repository';
 import { CategoryRepository } from '../repositories/category.repository';
-import { NotFoundError, ForbiddenError } from '../utils/errors';
+import { NotFoundError } from '../utils/errors';
 import { buildPaginationMeta } from '../utils/response';
 
 interface CreateTransactionInput {
@@ -101,10 +101,13 @@ export class TransactionService {
       }
     }
 
-    const updated = await this.txRepo.update(id, userId, {
-      ...input,
-      ...(input.date && { date: new Date(input.date) }),
-    });
+   const { date, ...rest } = input;
+
+const updated = await this.txRepo.update(id, userId, {
+  ...rest,
+  ...(date && { date: new Date(date) }),
+});
+
 
     return updated ? { ...updated, amount: Number(updated.amount) } : null;
   }
