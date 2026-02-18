@@ -1,10 +1,9 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
 import { useCreateTransaction, useUpdateTransaction } from '@/hooks/useTransactions';
-import { Input, Button, Select } from '@/components/ui';
+import { Input, Button } from '@/components/ui';
 import type { Transaction, Category } from '@/types';
 
 const transactionSchema = z.object({

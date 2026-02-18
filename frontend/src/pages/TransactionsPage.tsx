@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import  { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { Plus, Search, Filter, Download, ChevronLeft, ChevronRight, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
 import { useTransactions, useDeleteTransaction } from '@/hooks/useTransactions';
